@@ -11,6 +11,7 @@ class LoginViewModel: ViewModel() {
         if (username == "student" && password == "123") {
             loginSuccessLD.value = true
         } else {
+            loginSuccessLD.value = false
             errorLD.value = "Username atau password salah!"
         }
     }

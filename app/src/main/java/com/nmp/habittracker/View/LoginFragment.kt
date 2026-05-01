@@ -60,7 +60,7 @@ class LoginFragment : Fragment() {
 
         viewModel.errorLD.observe(viewLifecycleOwner, Observer {
             if (it != null && viewModel.loginSuccessLD.value == false) {
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         })
     }
