@@ -46,6 +46,7 @@ class LoginFragment : Fragment() {
                 Navigation.findNavController(requireView()).navigate(action)
             }
         })
+
         viewModel.errorLD.observe(viewLifecycleOwner, Observer {
             if (it != null && viewModel.loginSuccessLD.value == false) {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
