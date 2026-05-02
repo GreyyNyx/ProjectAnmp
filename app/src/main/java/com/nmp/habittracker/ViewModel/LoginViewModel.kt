@@ -3,7 +3,7 @@ package com.nmp.habittracker.ViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class LoginViewModel: ViewModel() {
+class LoginViewModel : ViewModel() {
     val loginSuccessLD = MutableLiveData<Boolean>()
     val errorLD = MutableLiveData<String>()
 
@@ -12,7 +12,7 @@ class LoginViewModel: ViewModel() {
             loginSuccessLD.value = true
         } else {
             loginSuccessLD.value = false
-            errorLD.value = "Username atau password salah!"
+            errorLD.value = "Username / Password salah"
         }
     }
 }
