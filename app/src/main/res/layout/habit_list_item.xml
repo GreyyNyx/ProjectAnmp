@@ -52,7 +52,7 @@
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="15dp"
                 android:text="TextView"
-                android:textSize="25sp"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/habitIcon"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -64,7 +64,7 @@
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="60dp"
                 android:text="TextView"
-                android:textSize="15sp"
+                android:textSize="10sp"
                 app:layout_constraintStart_toEndOf="@+id/habitIcon"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -154,6 +154,7 @@
                 app:chipCornerRadius="50dp"
                 app:chipIcon="@drawable/baseline_check_24"
                 app:chipIconTint="#FFFFFF"
+                app:layout_constraintEnd_toStartOf="@+id/habitProgress"
                 app:layout_constraintStart_toEndOf="@+id/habitTitle"
                 app:layout_constraintTop_toTopOf="parent"
                 app:textEndPadding="0dp"
