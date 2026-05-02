@@ -44,10 +44,19 @@ class LoginFragment : Fragment() {
         observeViewModel()
 
         binding.btnLogin.setOnClickListener {
-            val username = binding.txtUsername.text.toString()
-            val password = binding.txtPassword.text.toString()
-            viewModel.login(username, password)
-        }
+             val username = binding.txtUsername.text.toString()
+    val password = binding.txtPassword.text.toString()
+
+    if (username == "student" && password == "123") {
+        Toast.makeText(requireContext(), "Login berhasil", Toast.LENGTH_SHORT).show()
+
+        // pindah ke dashboard
+        val action = LoginFragmentDirections.actionLoginToDashboard()
+        Navigation.findNavController(it).navigate(action)
+
+    } else {
+        Toast.makeText(requireContext(), "Username / Password salah", Toast.LENGTH_SHORT).show()
+    }
     }
 
     fun observeViewModel() {
