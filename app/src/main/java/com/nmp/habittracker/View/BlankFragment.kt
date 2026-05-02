@@ -25,6 +25,7 @@ class BlankFragment : Fragment() {
         binding = FragmentBlankBinding.inflate(inflater,container,false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -58,14 +59,14 @@ class BlankFragment : Fragment() {
             }
         })
 
-        viewModel.loadingLD.observe(viewLifecycleOwner, Observer{
-            if (it==true){
-                binding.txtError?.visibility = View.GONE
+        viewModel.loadingLD.observe(viewLifecycleOwner) {
+            if (it == true) {
                 binding.progressLoad.visibility = View.VISIBLE
-            }else{
-                binding.txtError?.visibility = View.VISIBLE
+                binding.recViewHabit.visibility = View.GONE
+            } else {
                 binding.progressLoad.visibility = View.GONE
+                binding.recViewHabit.visibility = View.VISIBLE
             }
-        })
+        }
     }
 }

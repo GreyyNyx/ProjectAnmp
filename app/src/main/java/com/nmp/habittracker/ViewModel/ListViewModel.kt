@@ -20,19 +20,78 @@ class ListViewModel (application: Application): AndroidViewModel(application){
 
         val filehelper = FileHelper(getApplication())
 
-        val jsonString = filehelper.readFromFile()
+        saveDummyToFile()
 
-        if (jsonString.isNotEmpty()) {
+        val jsonString = filehelper.readFromFileExternal()
+        Log.d("FILE_PATH", filehelper.getFilePathExternal())
+        Log.d("JSON_DATA", jsonString)
 
-            val sType = object : TypeToken<List<Habit>>() {}.type
-            val result = Gson().fromJson<List<Habit>>(jsonString, sType)
-            habitsLD.value = ArrayList(result)
-            Log.d("print_file_read", result.toString())
+        if (!jsonString.isNullOrBlank()) {
+            try {
+                val sType = object : TypeToken<List<Habit>>() {}.type
+                val result = Gson().fromJson<List<Habit>>(jsonString, sType)
 
+                habitsLD.value = ArrayList(result)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                habitLoadErrorLD.value = true
+            }
         } else {
             habitLoadErrorLD.value = true
         }
-
         loadingLD.value = false
+    }
+    fun generateDummyData(): ArrayList<Habit> {
+        return arrayListOf(
+            Habit(
+                "Drink Water",
+                "Stay hydrated throughout the day",
+                8,
+                "glasses",
+                "water",
+                3,
+                false
+            ),
+            Habit(
+                "Exercise",
+                "Daily workout routine",
+                30,
+                "minutes",
+                "fitness",
+                15,
+                false
+            ),
+            Habit(
+                "Read Books",
+                "Expand your knowledge",
+                20,
+                "pages",
+                "book",
+                20,
+                true
+            ),
+            Habit(
+                "Meditation",
+                "Mindfulness practice",
+                10,
+                "minutes",
+                "meditation",
+                0,
+                false
+            )
+        )
+    }
+    fun saveDummyToFile() {
+        val fileHelper = FileHelper(getApplication())
+
+        val dummyList = generateDummyData()
+
+        val jsonString = Gson().toJson(dummyList)
+
+        Log.d("WRITE_JSON", jsonString)
+        Log.d("FILE_PATH", fileHelper.getFilePathExternal())
+
+        fileHelper.writeToFileExternal(jsonString)
     }
 }
