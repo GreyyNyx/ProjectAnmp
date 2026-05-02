@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nmp.habittracker.R
 import com.nmp.habittracker.ViewModel.ListViewModel
@@ -43,6 +45,10 @@ class BlankFragment : Fragment() {
             binding.progressLoad.visibility = View.VISIBLE
             viewModel.refresh()
             binding.refreshLayout.isRefreshing = false
+        }
+        binding.fabHabit.setOnClickListener {
+            val action = BlankFragmentDirections.actionNewHabitFragment()
+            it.findNavController().navigate(action)
         }
     }
 
