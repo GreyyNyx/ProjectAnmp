@@ -1,7 +1,10 @@
 package com.nmp.habittracker.View
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.nmp.habittracker.databinding.FragmentBlankBinding
 import com.nmp.habittracker.databinding.HabitListItemBinding
@@ -20,16 +23,69 @@ class BlankListAdapter(val habitList:ArrayList<Habit>): RecyclerView.Adapter<Bla
         holder: BlankViewHolder,
         position: Int
     ) {
-        holder.binding.habitTitle.text = habitList[position].name
-        holder.binding.habitDescription.text = habitList[position].description
-        holder.binding.habitProgressScore.text = habitList[position].progress.toString() + " / " + habitList[position].goal.toString() + habitList[position].unit
-        holder.binding.progressBar.max = habitList[position].goal
-        holder.binding.progressBar.progress = habitList[position].progress
+        val habit = habitList[position]
+        holder.binding.habitTitle.text = habit.name
+        holder.binding.habitDescription.text = habit.description
+        holder.binding.habitProgressScore.text = "${habit.progress} / ${habit.goal} ${habit.unit}"
+        holder.binding.progressBar.max = habit.goal
+        holder.binding.progressBar.progress = habit.progress
+
+        holder.binding.btnMinus.isEnabled = habit.progress > 0
+        holder.binding.btnPlus.isEnabled = habit.progress < habit.goal
+        holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
+        holder.binding.viewProgress.isVisible = habit.progress == habit.goal
+        holder.binding.habitProgress.solidColor
+        updateHabitProgress(holder, habit.progress,habit.goal)
+
         holder.binding.btnPlus.setOnClickListener {
+            if (habit.progress < habit.goal) {
+                habit.progress++
 
+                holder.binding.progressBar.progress = habit.progress
+                holder.binding.habitProgressScore.text = "${habit.progress} / ${habit.goal} ${habit.unit}"
+
+                // update state
+                holder.binding.btnMinus.isEnabled = true
+                holder.binding.btnPlus.isEnabled = habit.progress < habit.goal
+                holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
+                holder.binding.viewProgress.isVisible = habit.progress == habit.goal
+                updateHabitProgress(holder, habit.progress,habit.goal)
+            }
         }
-        holder.binding.btnMinus.setOnClickListener {
 
+        holder.binding.btnMinus.setOnClickListener {
+            if (habit.progress > 0) {
+                habit.progress--
+
+                holder.binding.progressBar.progress = habit.progress
+                holder.binding.habitProgressScore.text =
+                    "${habit.progress} / ${habit.goal} ${habit.unit}"
+
+                // update state
+                holder.binding.btnPlus.isEnabled = true
+                holder.binding.btnMinus.isEnabled = habit.progress > 0
+                holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
+                holder.binding.viewProgress.isVisible = habit.progress == habit.goal
+                updateHabitProgress(holder, habit.progress,habit.goal)
+            }
+        }
+    }
+
+    fun updateHabitProgress(
+        holder: BlankListAdapter.BlankViewHolder,
+        progress: Int,
+        goal: Int
+    ) {
+        val chip = holder.binding.habitProgress
+
+        if (progress == goal) {
+            chip.text = "Completed"
+            chip.chipBackgroundColor = ColorStateList.valueOf(Color.parseColor("#4CAF50"))
+            chip.setTextColor(Color.WHITE)
+        } else {
+            chip.text = "In Progress"
+            chip.chipBackgroundColor = ColorStateList.valueOf(Color.parseColor("#DBD5D5"))
+            chip.setTextColor(Color.BLACK)
         }
     }
 

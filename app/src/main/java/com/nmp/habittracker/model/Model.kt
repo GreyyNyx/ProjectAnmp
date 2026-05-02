@@ -6,6 +6,6 @@ data class Habit(
     val goal: Int,
     val unit: String,
     val icon: String,
-    val progress: Int = 0,
+    var progress: Int = 0,
     val isCompleted: Boolean = false
 )
