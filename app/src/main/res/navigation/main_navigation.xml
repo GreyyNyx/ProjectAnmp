@@ -22,9 +22,15 @@
         android:label="fragment_blank"
         tools:layout="@layout/fragment_blank" >
         <action
-            android:id="@+id/actionHomeFragment"
-            app:destination="@id/loginFragment"
+            android:id="@+id/actionNewHabitFragment"
+            app:destination="@id/newHabitFragment"
             app:enterAnim="@android:anim/slide_out_right"
             app:exitAnim="@android:anim/slide_in_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/newHabitFragment"
+        android:name="com.nmp.habittracker.View.NewHabitFragment"
+        android:label="fragment_new_habit"
+        tools:layout="@layout/fragment_new_habit" >
     </fragment>
 </navigation>

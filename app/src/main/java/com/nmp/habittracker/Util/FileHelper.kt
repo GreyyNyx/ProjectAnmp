@@ -63,39 +63,4 @@ class FileHelper (val context: Context) {
         val state = Environment.getExternalStorageState()
         return state == Environment.MEDIA_MOUNTED || state == Environment.MEDIA_MOUNTED_READ_ONLY
     }
-
-    fun writeFileToDownload(
-        context: Context,
-        fileName: String,
-        content: ByteArray,
-        mimeType: String
-    ): Boolean {
-
-        val resolver = context.contentResolver
-
-        val contentValues = ContentValues().apply {
-            put(MediaStore.Downloads.DISPLAY_NAME, fileName)
-            put(MediaStore.Downloads.MIME_TYPE, mimeType)
-            put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-        }
-
-        return try {
-            val uri = resolver.insert(
-                MediaStore.Downloads.EXTERNAL_CONTENT_URI,
-                contentValues
-            )
-
-            uri?.let {
-                resolver.openOutputStream(it)?.use { outputStream ->
-                    outputStream.write(content)
-                    outputStream.flush()
-                }
-                true
-            } ?: false
-
-        } catch (e: IOException) {
-            e.printStackTrace()
-            false
-        }
-    }
 }

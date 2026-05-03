@@ -45,28 +45,32 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
 
-            <TextView
-                android:id="@+id/habitTitle"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
                 android:layout_marginTop="15dp"
-                android:text="TextView"
-                android:textSize="17sp"
-                android:textStyle="bold"
+                android:orientation="vertical"
+                android:padding="5dp"
+                app:layout_constraintEnd_toStartOf="@+id/habitProgressIcon"
                 app:layout_constraintStart_toEndOf="@+id/habitIcon"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/habitDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="60dp"
-                android:text="TextView"
-                android:textSize="10sp"
-                app:layout_constraintStart_toEndOf="@+id/habitIcon"
-                app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/habitTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/habitDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="TextView"
+                    android:textSize="10sp" />
+            </LinearLayout>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/habitProgress"

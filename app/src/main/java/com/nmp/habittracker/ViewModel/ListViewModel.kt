@@ -49,7 +49,7 @@ class ListViewModel (application: Application): AndroidViewModel(application){
                 "Stay hydrated throughout the day",
                 8,
                 "glasses",
-                "water",
+                "glass_of_water",
                 3,
                 false
             ),
@@ -58,7 +58,7 @@ class ListViewModel (application: Application): AndroidViewModel(application){
                 "Daily workout routine",
                 30,
                 "minutes",
-                "fitness",
+                "exercise",
                 15,
                 false
             ),
@@ -76,7 +76,7 @@ class ListViewModel (application: Application): AndroidViewModel(application){
                 "Mindfulness practice",
                 10,
                 "minutes",
-                "meditation",
+                "yoga",
                 0,
                 false
             )
