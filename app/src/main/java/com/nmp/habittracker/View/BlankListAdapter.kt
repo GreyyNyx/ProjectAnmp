@@ -25,7 +25,11 @@ class BlankListAdapter(val habitList:ArrayList<Habit>): RecyclerView.Adapter<Bla
         position: Int
     ) {
         val habit = habitList[position]
-        val iconRes = getHabitIcon(habit.name)
+        val iconRes = holder.itemView.context.resources.getIdentifier(
+            habit.icon,
+            "drawable",
+            holder.itemView.context.packageName
+        )
 
         holder.binding.habitTitle.text = habit.name
         holder.binding.habitDescription.text = habit.description
@@ -71,19 +75,6 @@ class BlankListAdapter(val habitList:ArrayList<Habit>): RecyclerView.Adapter<Bla
                 holder.binding.viewProgress.isVisible = habit.progress == habit.goal
                 updateHabitProgress(holder, habit.progress,habit.goal)
             }
-        }
-    }
-
-    fun getHabitIcon(name: String): Int {
-        return when (name.lowercase()) {
-            "drink water" -> R.drawable.glass_of_water
-            "exercise" -> R.drawable.exercise
-            "read books" -> R.drawable.book
-            "meditation" -> R.drawable.yoga
-            "sleep" -> R.drawable.sleeping
-            "study" -> R.drawable.study
-            "wake up" -> R.drawable.wake_up
-            else -> R.drawable.habit
         }
     }
 

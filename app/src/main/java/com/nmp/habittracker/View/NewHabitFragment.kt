@@ -7,14 +7,19 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.nmp.habittracker.Util.FileHelper
+import com.nmp.habittracker.ViewModel.ListViewModel
 import com.nmp.habittracker.databinding.FragmentNewHabitBinding
 import com.nmp.habittracker.model.Habit
-import com.nmp.habittracker.model.HabitRepository
 
 class NewHabitFragment : Fragment() {
 
     private lateinit var binding: FragmentNewHabitBinding
+    private lateinit var viewModel: ListViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,18 +38,37 @@ class NewHabitFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
 
-        val iconList = arrayOf(
-            "water",
+        val iconNameList = arrayOf(
+            "Drink Water",
+            "Exercise",
+            "Book",
+            "Yoga",
+            "Sleeping",
+            "Study",
+            "Wake Up",
+            "Checklist",
+            "Salary"
+        )
+
+        val iconFileList = arrayOf(
+            "glass_of_water",
             "exercise",
             "book",
-            "meditation"
+            "yoga",
+            "sleeping",
+            "study",
+            "wake_up",
+            "check_list",
+            "salary"
         )
+
 
         val adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
-            iconList
+            iconNameList
         )
 
         adapter.setDropDownViewResource(
@@ -59,7 +83,9 @@ class NewHabitFragment : Fragment() {
             val description = binding.txtDescription.text.toString()
             val goalText = binding.txtGoal.text.toString()
             val unit = binding.txtUnit.text.toString()
-            val icon = binding.spinnerIcon.text.toString()
+            val selectedName = binding.spinnerIcon.text.toString()
+            val selectedIndex = iconNameList.indexOf(selectedName)
+            val icon = iconFileList[selectedIndex]
 
             if (
                 name.isEmpty() ||
@@ -86,7 +112,7 @@ class NewHabitFragment : Fragment() {
                 progress = 0
             )
 
-            HabitRepository.habitList.add(habit)
+            viewModel.addHabit(habit)
 
             Toast.makeText(
                 requireContext(),

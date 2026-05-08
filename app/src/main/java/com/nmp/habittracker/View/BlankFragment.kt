@@ -11,7 +11,6 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nmp.habittracker.ViewModel.ListViewModel
 import com.nmp.habittracker.databinding.FragmentBlankBinding
-import com.nmp.habittracker.model.HabitRepository
 
 
 class BlankFragment : Fragment() {

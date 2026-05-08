@@ -41,7 +41,8 @@ class FileHelper (val context: Context) {
                 lines.joinToString("\n")
             }
         } catch (e: IOException) {
-            e.printStackTrace().toString()
+            e.printStackTrace()
+            ""
         }
     }
 

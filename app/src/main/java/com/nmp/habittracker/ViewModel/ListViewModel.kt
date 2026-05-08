@@ -19,10 +19,8 @@ class ListViewModel (application: Application): AndroidViewModel(application){
         habitLoadErrorLD.value = false
 
         val filehelper = FileHelper(getApplication())
-
-        saveDummyToFile()
-
         val jsonString = filehelper.readFromFileExternal()
+
         Log.d("FILE_PATH", filehelper.getFilePathExternal())
         Log.d("JSON_DATA", jsonString)
 
@@ -30,15 +28,17 @@ class ListViewModel (application: Application): AndroidViewModel(application){
             try {
                 val sType = object : TypeToken<List<Habit>>() {}.type
                 val result = Gson().fromJson<List<Habit>>(jsonString, sType)
-
                 habitsLD.value = ArrayList(result)
-
+                habitLoadErrorLD.value = false
             } catch (e: Exception) {
                 e.printStackTrace()
                 habitLoadErrorLD.value = true
             }
         } else {
-            habitLoadErrorLD.value = true
+            val dummyList = generateDummyData()
+            saveHabits(dummyList)
+            habitsLD.value = dummyList
+            habitLoadErrorLD.value = false
         }
         loadingLD.value = false
     }
@@ -82,16 +82,43 @@ class ListViewModel (application: Application): AndroidViewModel(application){
             )
         )
     }
-    fun saveDummyToFile() {
+    fun saveHabits(habits: ArrayList<Habit>) {
         val fileHelper = FileHelper(getApplication())
-
-        val dummyList = generateDummyData()
-
-        val jsonString = Gson().toJson(dummyList)
+        val jsonString = Gson().toJson(habits)
 
         Log.d("WRITE_JSON", jsonString)
         Log.d("FILE_PATH", fileHelper.getFilePathExternal())
 
         fileHelper.writeToFileExternal(jsonString)
+    }
+
+    fun addHabit(habit: Habit) {
+
+        val fileHelper = FileHelper(getApplication())
+        val jsonString = fileHelper.readFromFileExternal()
+
+        val existingList: ArrayList<Habit>
+
+        if (!jsonString.isNullOrBlank()) {
+            val sType = object : TypeToken<List<Habit>>() {}.type
+            val result = Gson().fromJson<List<Habit>>(jsonString, sType)
+            existingList = ArrayList(result)
+        } else {
+
+            existingList = arrayListOf()
+        }
+        existingList.add(habit)
+        fileHelper.writeToFileExternal(Gson().toJson(existingList))
+        habitsLD.value = existingList
+    }
+    fun updateHabits(habits: ArrayList<Habit>) {
+
+        val fileHelper = FileHelper(getApplication())
+
+        val jsonString = Gson().toJson(habits)
+
+        fileHelper.writeToFileExternal(jsonString)
+
+        habitsLD.value = habits
     }
 }
