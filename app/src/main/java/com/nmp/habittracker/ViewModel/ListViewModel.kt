@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.nmp.habittracker.Util.FileHelper
 import com.nmp.habittracker.model.Habit
+import com.nmp.habittracker.model.HabitRepository
 
 
 class ListViewModel (application: Application): AndroidViewModel(application){
@@ -18,28 +19,42 @@ class ListViewModel (application: Application): AndroidViewModel(application){
         loadingLD.value = true
         habitLoadErrorLD.value = false
 
-        val filehelper = FileHelper(getApplication())
-        val jsonString = filehelper.readFromFileExternal()
+        try {
 
-        Log.d("FILE_PATH", filehelper.getFilePathExternal())
-        Log.d("JSON_DATA", jsonString)
+            val result =
+                HabitRepository.loadHabits(getApplication())
 
-        if (!jsonString.isNullOrBlank()) {
-            try {
-                val sType = object : TypeToken<List<Habit>>() {}.type
-                val result = Gson().fromJson<List<Habit>>(jsonString, sType)
-                habitsLD.value = ArrayList(result)
-                habitLoadErrorLD.value = false
-            } catch (e: Exception) {
-                e.printStackTrace()
-                habitLoadErrorLD.value = true
-            }
-        } else {
-            val dummyList = generateDummyData()
-            saveHabits(dummyList)
-            habitsLD.value = dummyList
-            habitLoadErrorLD.value = false
+            habitsLD.value = result
+
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+
+            habitLoadErrorLD.value = true
         }
+
+//        val filehelper = FileHelper(getApplication())
+//        val jsonString = filehelper.readFromFileExternal()
+//
+//        Log.d("FILE_PATH", filehelper.getFilePathExternal())
+//        Log.d("JSON_DATA", jsonString)
+//
+//        if (!jsonString.isNullOrBlank()) {
+//            try {
+//                val sType = object : TypeToken<List<Habit>>() {}.type
+//                val result = Gson().fromJson<List<Habit>>(jsonString, sType)
+//                habitsLD.value = ArrayList(result)
+//                habitLoadErrorLD.value = false
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//                habitLoadErrorLD.value = true
+//            }
+//        } else {
+//            val dummyList = generateDummyData()
+//            saveHabits(dummyList)
+//            habitsLD.value = dummyList
+//            habitLoadErrorLD.value = false
+//        }
         loadingLD.value = false
     }
     fun generateDummyData(): ArrayList<Habit> {
@@ -51,7 +66,6 @@ class ListViewModel (application: Application): AndroidViewModel(application){
                 "glasses",
                 "glass_of_water",
                 3,
-                false
             ),
             Habit(
                 "Exercise",
@@ -60,7 +74,6 @@ class ListViewModel (application: Application): AndroidViewModel(application){
                 "minutes",
                 "exercise",
                 15,
-                false
             ),
             Habit(
                 "Read Books",
@@ -69,7 +82,6 @@ class ListViewModel (application: Application): AndroidViewModel(application){
                 "pages",
                 "book",
                 20,
-                true
             ),
             Habit(
                 "Meditation",
@@ -78,7 +90,6 @@ class ListViewModel (application: Application): AndroidViewModel(application){
                 "minutes",
                 "yoga",
                 0,
-                false
             )
         )
     }
@@ -93,32 +104,76 @@ class ListViewModel (application: Application): AndroidViewModel(application){
     }
 
     fun addHabit(habit: Habit) {
+        HabitRepository.addHabit(
+            getApplication(),
+            habit
+        )
 
-        val fileHelper = FileHelper(getApplication())
-        val jsonString = fileHelper.readFromFileExternal()
-
-        val existingList: ArrayList<Habit>
-
-        if (!jsonString.isNullOrBlank()) {
-            val sType = object : TypeToken<List<Habit>>() {}.type
-            val result = Gson().fromJson<List<Habit>>(jsonString, sType)
-            existingList = ArrayList(result)
-        } else {
-
-            existingList = arrayListOf()
-        }
-        existingList.add(habit)
-        fileHelper.writeToFileExternal(Gson().toJson(existingList))
-        habitsLD.value = existingList
+        refresh()
+//        val fileHelper = FileHelper(getApplication())
+//        val jsonString = fileHelper.readFromFileExternal()
+//
+//        val existingList: ArrayList<Habit>
+//
+//        if (!jsonString.isNullOrBlank()) {
+//            val sType = object : TypeToken<List<Habit>>() {}.type
+//            val result = Gson().fromJson<List<Habit>>(jsonString, sType)
+//            existingList = ArrayList(result)
+//        } else {
+//
+//            existingList = arrayListOf()
+//        }
+//        existingList.add(habit)
+//        fileHelper.writeToFileExternal(Gson().toJson(existingList))
+//        habitsLD.value = existingList
     }
     fun updateHabits(habits: ArrayList<Habit>) {
-
-        val fileHelper = FileHelper(getApplication())
-
-        val jsonString = Gson().toJson(habits)
-
-        fileHelper.writeToFileExternal(jsonString)
+        HabitRepository.updateHabits(
+            getApplication(),
+            habits
+        )
 
         habitsLD.value = habits
+//        val fileHelper = FileHelper(getApplication())
+//
+//        val jsonString = Gson().toJson(habits)
+//
+//        fileHelper.writeToFileExternal(jsonString)
+//
+//        habitsLD.value = habits
+    }
+
+    fun increaseProgress(position: Int) {
+
+        val habits = habitsLD.value ?: arrayListOf()
+
+        if (habits[position].progress < habits[position].goal) {
+
+            habits[position].progress++
+
+            HabitRepository.updateHabits(
+                getApplication(),
+                habits
+            )
+
+            habitsLD.value = habits
+        }
+    }
+
+    fun decreaseProgress(position: Int) {
+
+        val habits = habitsLD.value ?: arrayListOf()
+
+        if (habits[position].progress > 0) {
+
+            habits[position].progress--
+
+            HabitRepository.updateHabits(
+                getApplication(),
+                habits
+            )
+
+            habitsLD.value = habits
+        }
     }
 }
