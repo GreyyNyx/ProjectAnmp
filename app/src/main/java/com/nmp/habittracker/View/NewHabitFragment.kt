@@ -51,15 +51,15 @@ class NewHabitFragment : Fragment() {
             android.R.layout.simple_spinner_dropdown_item
         )
 
-        binding.spinnerIcon.adapter = adapter
+        binding.spinnerIcon.setAdapter(adapter)
 
-        binding.btnCreateHabit.setOnClickListener {
+        binding.btnAddHabit.setOnClickListener {
 
-            val name = binding.etHabitName.text.toString()
-            val description = binding.etDescription.text.toString()
-            val goalText = binding.etGoal.text.toString()
-            val unit = binding.etUnit.text.toString()
-            val icon = binding.spinnerIcon.selectedItem.toString()
+            val name = binding.txtHabitName.text.toString()
+            val description = binding.txtDescription.text.toString()
+            val goalText = binding.txtGoal.text.toString()
+            val unit = binding.txtUnit.text.toString()
+            val icon = binding.spinnerIcon.text.toString()
 
             if (
                 name.isEmpty() ||

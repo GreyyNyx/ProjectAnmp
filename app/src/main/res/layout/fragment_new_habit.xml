@@ -90,6 +90,7 @@
                 android:layout_marginBottom="20dp">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtUnit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Unit *"
@@ -114,7 +115,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
                 <AutoCompleteTextView
-                    android:id="@+id/txtIcon"
+                    android:id="@+id/spinnerIcon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

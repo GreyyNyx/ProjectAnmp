@@ -1,19 +1,16 @@
 package com.nmp.habittracker.View
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.nmp.habittracker.R
 import com.nmp.habittracker.ViewModel.ListViewModel
 import com.nmp.habittracker.databinding.FragmentBlankBinding
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.nmp.habittracker.model.HabitRepository
 
 
@@ -30,19 +27,7 @@ class BlankFragment : Fragment() {
         return binding.root
     }
 
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val adapter = BlankListAdapter(
-        HabitRepository.habitList
-        )
-
-        binding.recyclerView.layoutManager =
-        LinearLayoutManager(requireContext())
-
-            binding.recyclerView.adapter = adapter
-}
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
@@ -64,12 +49,11 @@ class BlankFragment : Fragment() {
             val action = BlankFragmentDirections.actionNewHabitFragment()
             it.findNavController().navigate(action)
         }
+    }
 
-            override fun onResume() {
-            super.onResume()
-
-            binding.recyclerView.adapter?.notifyDataSetChanged()
-}
+    override fun onResume() {
+        super.onResume()
+        binding.recViewHabit.adapter?.notifyDataSetChanged()
     }
 
     fun observeViewModel(){
