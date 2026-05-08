@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.nmp.habittracker.R
 import com.nmp.habittracker.ViewModel.ListViewModel
 import com.nmp.habittracker.databinding.FragmentBlankBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.nmp.habittracker.model.HabitRepository
 
 
 class BlankFragment : Fragment() {
@@ -28,7 +30,19 @@ class BlankFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val adapter = BlankListAdapter(
+        HabitRepository.habitList
+        )
+
+        binding.recyclerView.layoutManager =
+        LinearLayoutManager(requireContext())
+
+            binding.recyclerView.adapter = adapter
+}
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
@@ -50,6 +64,12 @@ class BlankFragment : Fragment() {
             val action = BlankFragmentDirections.actionNewHabitFragment()
             it.findNavController().navigate(action)
         }
+
+            override fun onResume() {
+            super.onResume()
+
+            binding.recyclerView.adapter?.notifyDataSetChanged()
+}
     }
 
     fun observeViewModel(){
