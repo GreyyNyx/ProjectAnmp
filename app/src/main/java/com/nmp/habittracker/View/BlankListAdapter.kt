@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.nmp.habittracker.R
+import com.nmp.habittracker.ViewModel.ListViewModel
 import com.nmp.habittracker.databinding.FragmentBlankBinding
 import com.nmp.habittracker.databinding.HabitListItemBinding
 import com.nmp.habittracker.model.Habit
 
-class BlankListAdapter(val habitList:ArrayList<Habit>): RecyclerView.Adapter<BlankListAdapter.BlankViewHolder>() {
+class BlankListAdapter(val habitList:ArrayList<Habit>, val viewModel: ListViewModel): RecyclerView.Adapter<BlankListAdapter.BlankViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -58,6 +59,8 @@ class BlankListAdapter(val habitList:ArrayList<Habit>): RecyclerView.Adapter<Bla
                 holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
                 holder.binding.viewProgress.isVisible = habit.progress == habit.goal
                 updateHabitProgress(holder, habit.progress,habit.goal)
+
+                viewModel.updateHabits(habitList)
             }
         }
 
@@ -74,6 +77,8 @@ class BlankListAdapter(val habitList:ArrayList<Habit>): RecyclerView.Adapter<Bla
                 holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
                 holder.binding.viewProgress.isVisible = habit.progress == habit.goal
                 updateHabitProgress(holder, habit.progress,habit.goal)
+
+                viewModel.updateHabits(habitList)
             }
         }
     }

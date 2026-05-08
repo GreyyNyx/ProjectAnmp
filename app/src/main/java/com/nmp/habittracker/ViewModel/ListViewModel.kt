@@ -112,13 +112,8 @@ class ListViewModel (application: Application): AndroidViewModel(application){
         habitsLD.value = existingList
     }
     fun updateHabits(habits: ArrayList<Habit>) {
-
         val fileHelper = FileHelper(getApplication())
-
         val jsonString = Gson().toJson(habits)
-
         fileHelper.writeToFileExternal(jsonString)
-
-        habitsLD.value = habits
     }
 }
