@@ -16,7 +16,20 @@ import com.nmp.habittracker.databinding.FragmentBlankBinding
 class BlankFragment : Fragment() {
     private lateinit var binding: FragmentBlankBinding
     private lateinit var viewModel: ListViewModel
-    private lateinit var blankListAdapter : BlankListAdapter
+//    private val blankListAdapter = BlankListAdapter(arrayListOf())
+    private val blankListAdapter = BlankListAdapter(
+        arrayListOf(),
+        object : HabitProgressListener {
+
+            override fun onPlusClick(position: Int) {
+                viewModel.increaseProgress(position)
+            }
+
+            override fun onMinusClick(position: Int) {
+            viewModel.decreaseProgress(position)
+            }
+        }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +43,6 @@ class BlankFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
-        blankListAdapter = BlankListAdapter(arrayListOf(), viewModel)
         viewModel.refresh()
 
         binding.recViewHabit.layoutManager = LinearLayoutManager(context)

@@ -7,12 +7,16 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.nmp.habittracker.R
-import com.nmp.habittracker.ViewModel.ListViewModel
 import com.nmp.habittracker.databinding.FragmentBlankBinding
 import com.nmp.habittracker.databinding.HabitListItemBinding
 import com.nmp.habittracker.model.Habit
 
-class BlankListAdapter(val habitList:ArrayList<Habit>, val viewModel: ListViewModel): RecyclerView.Adapter<BlankListAdapter.BlankViewHolder>() {
+interface HabitProgressListener {
+    fun onPlusClick(position: Int)
+    fun onMinusClick(position: Int)
+}
+
+class BlankListAdapter(val habitList:ArrayList<Habit>, val listener: HabitProgressListener): RecyclerView.Adapter<BlankListAdapter.BlankViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -47,40 +51,43 @@ class BlankListAdapter(val habitList:ArrayList<Habit>, val viewModel: ListViewMo
         updateHabitProgress(holder, habit.progress,habit.goal)
 
         holder.binding.btnPlus.setOnClickListener {
-            if (habit.progress < habit.goal) {
-                habit.progress++
-
-                holder.binding.progressBar.progress = habit.progress
-                holder.binding.habitProgressScore.text = "${habit.progress} / ${habit.goal} ${habit.unit}"
-
-                // update state
-                holder.binding.btnMinus.isEnabled = true
-                holder.binding.btnPlus.isEnabled = habit.progress < habit.goal
-                holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
-                holder.binding.viewProgress.isVisible = habit.progress == habit.goal
-                updateHabitProgress(holder, habit.progress,habit.goal)
-
-                viewModel.updateHabits(habitList)
-            }
+            listener.onPlusClick(position)
         }
 
         holder.binding.btnMinus.setOnClickListener {
-            if (habit.progress > 0) {
-                habit.progress--
-
-                holder.binding.progressBar.progress = habit.progress
-                holder.binding.habitProgressScore.text = "${habit.progress} / ${habit.goal} ${habit.unit}"
-
-                // update state
-                holder.binding.btnPlus.isEnabled = true
-                holder.binding.btnMinus.isEnabled = habit.progress > 0
-                holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
-                holder.binding.viewProgress.isVisible = habit.progress == habit.goal
-                updateHabitProgress(holder, habit.progress,habit.goal)
-
-                viewModel.updateHabits(habitList)
-            }
+            listener.onMinusClick(position)
         }
+//        holder.binding.btnPlus.setOnClickListener {
+//            if (habit.progress < habit.goal) {
+//                habit.progress++
+//
+//                holder.binding.progressBar.progress = habit.progress
+//                holder.binding.habitProgressScore.text = "${habit.progress} / ${habit.goal} ${habit.unit}"
+//
+//                // update state
+//                holder.binding.btnMinus.isEnabled = true
+//                holder.binding.btnPlus.isEnabled = habit.progress < habit.goal
+//                holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
+//                holder.binding.viewProgress.isVisible = habit.progress == habit.goal
+//                updateHabitProgress(holder, habit.progress,habit.goal)
+//            }
+//        }
+//
+//        holder.binding.btnMinus.setOnClickListener {
+//            if (habit.progress > 0) {
+//                habit.progress--
+//
+//                holder.binding.progressBar.progress = habit.progress
+//                holder.binding.habitProgressScore.text = "${habit.progress} / ${habit.goal} ${habit.unit}"
+//
+//                // update state
+//                holder.binding.btnPlus.isEnabled = true
+//                holder.binding.btnMinus.isEnabled = habit.progress > 0
+//                holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
+//                holder.binding.viewProgress.isVisible = habit.progress == habit.goal
+//                updateHabitProgress(holder, habit.progress,habit.goal)
+//            }
+//        }
     }
 
     fun updateHabitProgress(

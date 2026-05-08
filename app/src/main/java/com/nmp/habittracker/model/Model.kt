@@ -7,5 +7,9 @@ data class Habit(
     val unit: String,
     val icon: String,
     var progress: Int = 0,
-    val isCompleted: Boolean = false
-)
+){
+
+    fun isCompleted(): Boolean {
+        return progress >= goal
+    }
+}
