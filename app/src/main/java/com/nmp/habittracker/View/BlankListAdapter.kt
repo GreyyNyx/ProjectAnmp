@@ -3,17 +3,17 @@ package com.nmp.habittracker.View
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nmp.habittracker.R
 import com.nmp.habittracker.ViewModel.ListViewModel
-import com.nmp.habittracker.databinding.FragmentBlankBinding
 import com.nmp.habittracker.databinding.HabitListItemBinding
 import com.nmp.habittracker.model.Habit
 
-class BlankListAdapter(val habitList:ArrayList<Habit>, val viewModel: ListViewModel): RecyclerView.Adapter<BlankListAdapter.BlankViewHolder>() {
+class BlankListAdapter(val habitList:ArrayList<Habit>, val viewModel: ListViewModel): RecyclerView.Adapter<BlankListAdapter.BlankViewHolder>(), HabitListener {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -27,6 +27,10 @@ class BlankListAdapter(val habitList:ArrayList<Habit>, val viewModel: ListViewMo
         position: Int
     ) {
         val habit = habitList[position]
+
+        holder.binding.habit = habit
+        holder.binding.listener = this
+
         val iconRes = holder.itemView.context.resources.getIdentifier(
             habit.icon,
             "drawable",
@@ -47,46 +51,46 @@ class BlankListAdapter(val habitList:ArrayList<Habit>, val viewModel: ListViewMo
         holder.binding.viewProgress.isVisible = habit.progress == habit.goal
         updateHabitProgress(holder, habit.progress,habit.goal)
 
-        holder.binding.btnPlus.setOnClickListener {
-            if (habit.progress < habit.goal) {
-                habit.progress++
-
-                holder.binding.progressBar.progress = habit.progress
-                holder.binding.habitProgressScore.text = "${habit.progress} / ${habit.goal} ${habit.unit}"
-
-                // update state
-                holder.binding.btnMinus.isEnabled = true
-                holder.binding.btnPlus.isEnabled = habit.progress < habit.goal
-                holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
-                holder.binding.viewProgress.isVisible = habit.progress == habit.goal
-                updateHabitProgress(holder, habit.progress,habit.goal)
-
-                viewModel.updateHabit(habit)
-            }
-        }
-
-        holder.binding.btnMinus.setOnClickListener {
-            if (habit.progress > 0) {
-                habit.progress--
-
-                holder.binding.progressBar.progress = habit.progress
-                holder.binding.habitProgressScore.text = "${habit.progress} / ${habit.goal} ${habit.unit}"
-
-                // update state
-                holder.binding.btnPlus.isEnabled = true
-                holder.binding.btnMinus.isEnabled = habit.progress > 0
-                holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
-                holder.binding.viewProgress.isVisible = habit.progress == habit.goal
-                updateHabitProgress(holder, habit.progress,habit.goal)
-
-                viewModel.updateHabit(habit)
-            }
-        }
-        holder.binding.habitTitle.setOnClickListener {
-            val action =
-                BlankFragmentDirections.actionEditHabitFragment(habitList[position].uuid)
-            it.findNavController().navigate(action)
-        }
+//        holder.binding.btnPlus.setOnClickListener {
+//            if (habit.progress < habit.goal) {
+//                habit.progress++
+//
+//                holder.binding.progressBar.progress = habit.progress
+//                holder.binding.habitProgressScore.text = "${habit.progress} / ${habit.goal} ${habit.unit}"
+//
+//                // update state
+//                holder.binding.btnMinus.isEnabled = true
+//                holder.binding.btnPlus.isEnabled = habit.progress < habit.goal
+//                holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
+//                holder.binding.viewProgress.isVisible = habit.progress == habit.goal
+//                updateHabitProgress(holder, habit.progress,habit.goal)
+//
+//                viewModel.updateHabit(habit)
+//            }
+//        }
+//
+//        holder.binding.btnMinus.setOnClickListener {
+//            if (habit.progress > 0) {
+//                habit.progress--
+//
+//                holder.binding.progressBar.progress = habit.progress
+//                holder.binding.habitProgressScore.text = "${habit.progress} / ${habit.goal} ${habit.unit}"
+//
+//                // update state
+//                holder.binding.btnPlus.isEnabled = true
+//                holder.binding.btnMinus.isEnabled = habit.progress > 0
+//                holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
+//                holder.binding.viewProgress.isVisible = habit.progress == habit.goal
+//                updateHabitProgress(holder, habit.progress,habit.goal)
+//
+//                viewModel.updateHabit(habit)
+//            }
+//        }
+//        holder.binding.habitTitle.setOnClickListener {
+//            val action =
+//                BlankFragmentDirections.actionEditHabitFragment(habitList[position].uuid)
+//            it.findNavController().navigate(action)
+//        }
     }
 
     fun updateHabitProgress(
@@ -115,6 +119,28 @@ class BlankListAdapter(val habitList:ArrayList<Habit>, val viewModel: ListViewMo
         habitList.clear()
         habitList.addAll(newHabitList)
         notifyDataSetChanged()
+    }
+
+    override fun onPlusClick(habit: Habit) {
+        if (habit.progress < habit.goal) {
+            habit.progress++
+            viewModel.updateHabit(habit)
+            notifyDataSetChanged()
+        }
+    }
+
+    override fun onMinusClick(habit: Habit) {
+        if (habit.progress > 0) {
+            habit.progress--
+            viewModel.updateHabit(habit)
+            notifyDataSetChanged()
+        }
+    }
+
+    override fun onTitleClick(v: View) {
+        val uuid = v.tag.toString().toInt()
+        val action = BlankFragmentDirections.actionEditHabitFragment(uuid)
+        v.findNavController().navigate(action)
     }
 
     class BlankViewHolder(var binding: HabitListItemBinding): RecyclerView.ViewHolder(binding.root)
