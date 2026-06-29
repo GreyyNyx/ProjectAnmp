@@ -26,11 +26,22 @@
             app:destination="@id/newHabitFragment"
             app:enterAnim="@android:anim/slide_out_right"
             app:exitAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/actionEditHabitFragment"
+            app:destination="@id/editHabitFragment" />
     </fragment>
     <fragment
         android:id="@+id/newHabitFragment"
         android:name="com.nmp.habittracker.View.NewHabitFragment"
         android:label="fragment_new_habit"
         tools:layout="@layout/fragment_new_habit" >
+    </fragment>
+    <fragment
+        android:id="@+id/editHabitFragment"
+        android:name="com.nmp.habittracker.View.EditHabitFragment"
+        android:label="EditHabitFragment" >
+        <argument
+            android:name="uuid"
+            app:argType="integer" />
     </fragment>
 </navigation>

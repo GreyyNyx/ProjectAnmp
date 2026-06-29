@@ -1,67 +1,60 @@
 package com.nmp.habittracker.Util
 
-import android.content.ContentValues
 import android.content.Context
 import android.os.Environment
-import android.provider.MediaStore
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class FileHelper (val context: Context) {
-    val folderName = "habit_folder"
-    val fileName = "habit_data.txt"
+class FileHelper (context: Context) {
 
-    // function untuk bikin file baru/load file jika sudah ada
-    private fun getFileExternal(): File {
-        val dir = File(context.getExternalFilesDir(null), folderName)
-        if (!dir.exists()) {
-            dir.mkdirs() // bikin folder jika folder belum ada
+//    ==================
+//    LOGIN WITH SESSION
+//    ==================
+
+    private val SESSION_TIMEOUT = 120 * 60 * 1000L // 2 menit
+
+    private val pref = context.getSharedPreferences(
+        "habit_pref",
+        Context.MODE_PRIVATE
+    )
+
+    fun saveLogin(username: String) {
+        pref.edit()
+            .putBoolean("isLogin", true)
+            .putString("username", username)
+            .putLong("loginTime", System.currentTimeMillis())
+            .apply()
+    }
+    fun isLogin(): Boolean {
+        return pref.getBoolean("isLogin", false)
+    }
+
+    fun getUsername(): String? {
+        return pref.getString("username", "")
+    }
+
+    fun isSessionExpired(): Boolean {
+        val loginTime = pref.getLong("loginTime", 0)
+        if (loginTime == 0L) return true
+        val currentTime = System.currentTimeMillis()
+        return (currentTime - loginTime) > SESSION_TIMEOUT
+    }
+
+    fun checkSession(): Boolean {
+        if (isSessionExpired()) {
+            logout()
+            return false
         }
-        return File(dir, fileName)
+        return isLogin()
     }
 
-    // tulis string ke dalam file
-    fun writeToFileExternal(data: String) {
-        try {
-            val file = getFileExternal()
-            FileOutputStream(file, false).use { output ->
-                output.write(data.toByteArray())
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+    fun logout() {
+        pref.edit()
+            .putBoolean("isLogin", false)
+            .remove("username")
+            .remove("loginTime")
+            .apply()
     }
 
-    // Baca string dari file
-    fun readFromFileExternal(): String {
-        return try {
-            val file = getFileExternal()
-            file.bufferedReader().useLines { lines ->
-                lines.joinToString("\n")
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            ""
-        }
-    }
-
-    // Hapus file
-    fun deleteFileExternal(): Boolean {
-        return getFileExternal().delete()
-    }
-
-    // Menghasilkan string path menuju file
-    fun getFilePathExternal(): String {
-        return getFileExternal().absolutePath
-    }
-
-    fun isExternalStorageWritable(): Boolean {
-        return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
-    }
-
-    fun isExternalStorageReadable(): Boolean {
-        val state = Environment.getExternalStorageState()
-        return state == Environment.MEDIA_MOUNTED || state == Environment.MEDIA_MOUNTED_READ_ONLY
-    }
 }

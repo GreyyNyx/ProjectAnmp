@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.nmp.habittracker.R
+import com.nmp.habittracker.Util.FileHelper
 import com.nmp.habittracker.ViewModel.LoginViewModel
 import com.nmp.habittracker.databinding.FragmentLoginBinding
 class LoginFragment : Fragment() {
@@ -27,6 +28,12 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val pref = FileHelper(requireContext())
+        if (pref.checkSession()) {
+            val action = LoginFragmentDirections.actionBlankFragment()
+            Navigation.findNavController(view).navigate(action)
+        }
 
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
 

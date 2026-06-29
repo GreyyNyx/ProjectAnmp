@@ -1,46 +1,41 @@
 package com.nmp.habittracker.ViewModel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.nmp.habittracker.Util.FileHelper
 import com.nmp.habittracker.model.Habit
+import com.nmp.habittracker.model.HabitDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 
-class ListViewModel (application: Application): AndroidViewModel(application){
-    val habitsLD = MutableLiveData<ArrayList<Habit>>()
+class ListViewModel (application: Application): AndroidViewModel(application), CoroutineScope{
+    val habitsLD = MutableLiveData<List<Habit>>()
     val habitLoadErrorLD = MutableLiveData<Boolean>()
     val loadingLD = MutableLiveData<Boolean>()
+    private var job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.IO
     fun refresh() {
         loadingLD.value = true
         habitLoadErrorLD.value = false
 
-        val filehelper = FileHelper(getApplication())
-        val jsonString = filehelper.readFromFileExternal()
-
-        Log.d("FILE_PATH", filehelper.getFilePathExternal())
-        Log.d("JSON_DATA", jsonString)
-
-        if (!jsonString.isNullOrBlank()) {
-            try {
-                val sType = object : TypeToken<List<Habit>>() {}.type
-                val result = Gson().fromJson<List<Habit>>(jsonString, sType)
-                habitsLD.value = ArrayList(result)
-                habitLoadErrorLD.value = false
-            } catch (e: Exception) {
-                e.printStackTrace()
-                habitLoadErrorLD.value = true
+        launch {
+            val db = HabitDatabase.buildDatabase(
+                getApplication()
+            )
+            if (db.habitDao().selectAllHabit().isEmpty()) {
+                db.habitDao().insertAll(
+                    *generateDummyData().toTypedArray()
+                )
             }
-        } else {
-            val dummyList = generateDummyData()
-            saveHabits(dummyList)
-            habitsLD.value = dummyList
-            habitLoadErrorLD.value = false
+
+            habitsLD.postValue(db.habitDao().selectAllHabit())
+            loadingLD.postValue(false)
         }
-        loadingLD.value = false
     }
     fun generateDummyData(): ArrayList<Habit> {
         return arrayListOf(
@@ -78,37 +73,32 @@ class ListViewModel (application: Application): AndroidViewModel(application){
             )
         )
     }
-    fun saveHabits(habits: ArrayList<Habit>) {
-        val fileHelper = FileHelper(getApplication())
-        val jsonString = Gson().toJson(habits)
-
-        Log.d("WRITE_JSON", jsonString)
-        Log.d("FILE_PATH", fileHelper.getFilePathExternal())
-
-        fileHelper.writeToFileExternal(jsonString)
-    }
-
     fun addHabit(habit: Habit) {
-        val fileHelper = FileHelper(getApplication())
-        val jsonString = fileHelper.readFromFileExternal()
-
-        val existingList: ArrayList<Habit>
-
-        if (!jsonString.isNullOrBlank()) {
-            val sType = object : TypeToken<List<Habit>>() {}.type
-            val result = Gson().fromJson<List<Habit>>(jsonString, sType)
-            existingList = ArrayList(result)
-        } else {
-
-            existingList = arrayListOf()
+        launch {
+            val db = HabitDatabase.buildDatabase(
+                getApplication()
+            )
+            db.habitDao().insert(habit)
+            habitsLD.postValue(db.habitDao().selectAllHabit())
         }
-        existingList.add(habit)
-        fileHelper.writeToFileExternal(Gson().toJson(existingList))
-        habitsLD.value = existingList
     }
-    fun updateHabits(habits: ArrayList<Habit>) {
-        val fileHelper = FileHelper(getApplication())
-        val jsonString = Gson().toJson(habits)
-        fileHelper.writeToFileExternal(jsonString)
+    fun updateHabit(habit: Habit) {
+        launch {
+            val db = HabitDatabase.buildDatabase(
+                getApplication()
+            )
+            db.habitDao().updateHabit(habit)
+            habitsLD.postValue(db.habitDao().selectAllHabit())
+        }
+    }
+
+    fun clearHabit(habit: Habit) {
+        launch {
+            val db = HabitDatabase.buildDatabase(
+                getApplication()
+            )
+            db.habitDao().deleteHabit(habit)
+            habitsLD.postValue(db.habitDao().selectAllHabit())
+        }
     }
 }

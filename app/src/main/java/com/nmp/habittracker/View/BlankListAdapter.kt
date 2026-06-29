@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.nmp.habittracker.R
 import com.nmp.habittracker.ViewModel.ListViewModel
@@ -60,7 +61,7 @@ class BlankListAdapter(val habitList:ArrayList<Habit>, val viewModel: ListViewMo
                 holder.binding.viewProgress.isVisible = habit.progress == habit.goal
                 updateHabitProgress(holder, habit.progress,habit.goal)
 
-                viewModel.updateHabits(habitList)
+                viewModel.updateHabit(habit)
             }
         }
 
@@ -78,8 +79,13 @@ class BlankListAdapter(val habitList:ArrayList<Habit>, val viewModel: ListViewMo
                 holder.binding.viewProgress.isVisible = habit.progress == habit.goal
                 updateHabitProgress(holder, habit.progress,habit.goal)
 
-                viewModel.updateHabits(habitList)
+                viewModel.updateHabit(habit)
             }
+        }
+        holder.binding.habitTitle.setOnClickListener {
+            val action =
+                BlankFragmentDirections.actionEditHabitFragment(habitList[position].uuid)
+            it.findNavController().navigate(action)
         }
     }
 
@@ -105,7 +111,7 @@ class BlankListAdapter(val habitList:ArrayList<Habit>, val viewModel: ListViewMo
         return habitList.size
     }
 
-    fun updateHabitList(newHabitList: ArrayList<Habit>) {
+    fun updateHabitList(newHabitList: List<Habit>) {
         habitList.clear()
         habitList.addAll(newHabitList)
         notifyDataSetChanged()
