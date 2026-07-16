@@ -40,6 +40,15 @@ class NewHabitFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
 
+        binding.habit = Habit(
+            name = "",
+            description = "",
+            goal = 0,
+            unit = "",
+            icon = "",
+            progress = 0
+        )
+
         val iconNameList = arrayOf(
             "Drink Water",
             "Exercise",

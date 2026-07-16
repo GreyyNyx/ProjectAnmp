@@ -14,9 +14,10 @@ import com.nmp.habittracker.ViewModel.DetailHabitViewModel
 import com.nmp.habittracker.databinding.FragmentNewHabitBinding
 import com.nmp.habittracker.model.Habit
 
-class EditHabitFragment : Fragment() {
+class EditHabitFragment : Fragment(), View.OnClickListener {
     private lateinit var viewModel: DetailHabitViewModel
     private lateinit var binding: FragmentNewHabitBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,24 +26,28 @@ class EditHabitFragment : Fragment() {
             false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(DetailHabitViewModel::class.java)
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.textView.text = "Edit Habit"
         binding.btnAddHabit.text = "Save Changes"
+        binding.btnAddHabit.setOnClickListener(this)
         val uuid = EditHabitFragmentArgs.fromBundle(requireArguments()).uuid
         viewModel.fetch(uuid)
         observeViewModel()
     }
+
     fun observeViewModel() {
         viewModel.habitLD.observe(viewLifecycleOwner, Observer {
             binding.habit = it
-            binding.listener = this
-            binding.saveListener = this
         })
     }
+
     override fun onClick(v: View) {
         val obj = binding.habit as Habit
+        obj.goal = binding.txtGoal.text.toString().toIntOrNull() ?: obj.goal
         viewModel.updateHabit(obj)
         Toast.makeText(v.context, "Habit Updated", Toast.LENGTH_SHORT).show()
         v.findNavController().popBackStack()

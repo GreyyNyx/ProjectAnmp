@@ -7,15 +7,15 @@ import androidx.room.PrimaryKey
 @Entity
 data class Habit(
     @ColumnInfo(name="name")
-    val name: String,
+    var name: String,
     @ColumnInfo(name="description")
-    val description: String,
+    var description: String,
     @ColumnInfo(name="goal")
-    val goal: Int,
+    var goal: Int,
     @ColumnInfo(name="unit")
-    val unit: String,
+    var unit: String,
     @ColumnInfo(name="icon")
-    val icon: String,
+    var icon: String,
     @ColumnInfo(name="progress")
     var progress: Int = 0,
 ){

@@ -36,19 +36,20 @@ class BlankListAdapter(val habitList:ArrayList<Habit>, val viewModel: ListViewMo
             "drawable",
             holder.itemView.context.packageName
         )
-
-        holder.binding.habitTitle.text = habit.name
-        holder.binding.habitDescription.text = habit.description
-        holder.binding.habitProgressScore.text = "${habit.progress} / ${habit.goal} ${habit.unit}"
-        holder.binding.progressBar.max = habit.goal
-        holder.binding.progressBar.progress = habit.progress
         holder.binding.habitIcon.setImageResource(iconRes)
 
+//        holder.binding.habitTitle.text = habit.name
+//        holder.binding.habitDescription.text = habit.description
+//        holder.binding.habitProgressScore.text = "${habit.progress} / ${habit.goal} ${habit.unit}"
+//        holder.binding.progressBar.max = habit.goal
+//        holder.binding.progressBar.progress = habit.progress
+//        holder.binding.habitIcon.setImageResource(iconRes)
+//
+//        holder.binding.btnMinus.isEnabled = habit.progress > 0
+//        holder.binding.btnPlus.isEnabled = habit.progress < habit.goal
+//        holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
+//        holder.binding.viewProgress.isVisible = habit.progress == habit.goal
 
-        holder.binding.btnMinus.isEnabled = habit.progress > 0
-        holder.binding.btnPlus.isEnabled = habit.progress < habit.goal
-        holder.binding.habitProgressIcon.isVisible = habit.progress == habit.goal
-        holder.binding.viewProgress.isVisible = habit.progress == habit.goal
         updateHabitProgress(holder, habit.progress,habit.goal)
 
 //        holder.binding.btnPlus.setOnClickListener {
