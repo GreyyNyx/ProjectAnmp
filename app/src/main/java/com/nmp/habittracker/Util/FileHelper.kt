@@ -8,11 +8,7 @@ import java.io.IOException
 
 class FileHelper (context: Context) {
 
-//    ==================
-//    LOGIN WITH SESSION
-//    ==================
-
-    private val SESSION_TIMEOUT = 120 * 60 * 1000L // 2 menit
+    private val SESSION_TIMEOUT = 30 * 1000L // 2 menit
 
     private val pref = context.getSharedPreferences(
         "habit_pref",

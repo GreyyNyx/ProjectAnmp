@@ -44,6 +44,7 @@
                     android:paddingTop="10dp"
                     android:paddingBottom="20dp"
                     android:text="Add a New Habit"
+                    android:textColor="?attr/colorOnSecondaryFixedVariant"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -57,9 +58,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Habit Name *"
-                        android:text="@={habit.name}"
                         android:inputType="text"
-                        android:paddingBottom="20dp" />
+                        android:paddingBottom="20dp"
+                        android:text="@={habit.name}"
+                        android:textColor="?attr/colorOnSecondaryFixedVariant"
+                        android:textColorHint="?attr/colorOnSecondaryFixedVariant" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -74,9 +77,11 @@
                         android:layout_height="wrap_content"
                         android:gravity="start|top"
                         android:hint="Short Description *"
-                        android:text="@={habit.description}"
                         android:maxLines="5"
-                        android:minLines="3" />
+                        android:minLines="3"
+                        android:text="@={habit.description}"
+                        android:textColor="?attr/colorOnSecondaryFixedVariant"
+                        android:textColorHint="?attr/colorOnSecondaryFixedVariant" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -89,8 +94,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint=" Goal *"
+                        android:inputType="number|numberDecimal"
                         android:text="@{String.valueOf(habit.goal)}"
-                        android:inputType="number|numberDecimal" />
+                        android:textColor="?attr/colorOnSecondaryFixedVariant"
+                        android:textColorHint="?attr/colorOnSecondaryFixedVariant" />
 
                     <TextView
                         android:id="@+id/textView4"
@@ -114,7 +121,9 @@
                         android:layout_height="wrap_content"
                         android:hint="Unit *"
                         android:inputType="text"
-                        android:text="@={habit.unit}" />
+                        android:text="@={habit.unit}"
+                        android:textColor="?attr/colorOnSecondaryFixedVariant"
+                        android:textColorHint="?attr/colorOnSecondaryFixedVariant" />
 
                     <TextView
                         android:id="@+id/textView5"
@@ -139,7 +148,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@={habit.icon}" />
+                        android:text="@={habit.icon}"
+                        android:textColor="?attr/colorOnSecondaryFixedVariant"
+                        android:textColorHint="?attr/colorOnSecondaryFixedVariant" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
